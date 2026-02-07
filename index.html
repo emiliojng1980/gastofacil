@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GastoFácil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="app">
+
+        <h1>💸 Gasto Fácil</h1>
+
+        <!-- Ingreso mensual -->
+        <section class="card">
+            <h2>Ingreso mensual</h2>
+            <input type="number" id="incomeInput" placeholder="Ej: 500000">
+        </section>
+
+        <!-- Resumen -->
+        <section class="card resumen">
+            <div>
+                <span>Total gastado</span>
+                <strong id="totalSpent">$0</strong>
+            </div>
+            <div>
+                <span>Ahorro del mes</span>
+                <strong id="savings">$0</strong>
+                </div>
+        </section>
+
+        <!-- Gráfico del mes -->
+        <section class="card">
+            <h2>Resumen del mes</h2>
+            <canvas id="monthChart"></canvas>
+        </section>
+
+        <!-- Cerrar mes -->
+        <section class="card">
+            <button id="closeMonthBtn">Cerrar mes</button>
+        </section>
+
+        <!-- Historial -->
+        <section class="card">
+            <h2>Historial de meses</h2>
+            <ul id="monthsList"></ul>
+        </section>
+
+        <!-- Agregar gasto -->
+        <section class="card">
+            <h2>Agregar gasto</h2>
+
+            <input type="number" id="amountInput" placeholder="Monto">
+            
+            <select id="categoryInput">
+                <option value="">Categoría</option>
+                <option>Comida</option>
+                <option>Combustible</option>
+                <option>Transporte</option>
+                <option>Servicios</option>
+                <option>Educacion</option>
+                <option>Ocio</option>
+                <option>Otros</option>
+            </select>
+
+            <input type="text" id="descriptionInput" placeholder="Descripción (opcional)">
+
+            <button id="addExpenseBtn">Agregar</button>
+        </section>
+
+        <!-- Lista de gastos -->
+        <section class="card">
+            <h2>Gastos</h2>
+            <ul id="expenseList"></ul>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+</html>
