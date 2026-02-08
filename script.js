@@ -150,14 +150,30 @@ function closeMonth() {
         return;
     }
 
+    const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
+    const saldo = income - totalSpent;
+
+
+    const monthName = getMonthName();
+    const existingMonth = months.find(m => m.name === monthName);
+
+    if (existingMonth) {
+        existingMonth.income += income;
+        existingMonth.totalSpent += totalSpent;
+        existingMonth.saldo += saldo;
+        existingMonth.expenses = existingMonth.expenses.concat(expenses);
+    } else {
     const monthData = {
-    name: getMonthName(),
-    income,
-    expenses
+        name: monthName,
+        income,
+        totalSpent,
+        saldo,
+        expenses
     };
 
     months.push(monthData);
-
+    }
+    
     // Reset mes actual
     income = 0;
     expenses = [];
@@ -175,10 +191,18 @@ function updateMonthsUI() {
         const total = month.expenses.reduce((sum, e) => sum + e.amount, 0);
 
         const li = document.createElement("li");
+
+        const saldo = month.saldo ?? (month.income - month.totalSpent);
+
         li.innerHTML = `
             <strong>${month.name}</strong>
             <small>Ingreso: $${month.income}</small>
-            <small>Gastos: $${total}</small>
+            <small>Gastos: $${month.totalSpent}</small>
+            <small class="${saldo >= 0 ? 'positivo' : 'negativo'}">
+            Saldo: $${saldo}
+            </small>
+            <button onclick="toggleDetail(${index})">Ver detalle</button>
+            <div class="detalle" id="detalle-${index}" style="display:none;"></div>
         `;
         monthsList.appendChild(li);
     });
@@ -214,4 +238,39 @@ function updateChart() {
             }
         }
     });
+}
+
+function toggleDetail(index) {
+    const detalleDiv = document.getElementById(`detalle-${index}`);
+
+    if (detalleDiv.style.display === "none") {
+        renderDetail(index, detalleDiv);
+        detalleDiv.style.display = "block";
+    } else {
+        detalleDiv.style.display = "none";
+        detalleDiv.innerHTML = "";
+    }
+}
+
+function renderDetail(index, container) {
+    const month = months[index];
+
+    const resumen = {};
+
+    month.expenses.forEach(exp => {
+        if (!resumen[exp.category]) {
+            resumen[exp.category] = 0;
+        }
+        resumen[exp.category] += exp.amount;
+    });
+
+    let html = "<ul>";
+
+    for (const categoria in resumen) {
+        html += `<li>${categoria}: $${resumen[categoria]}</li>`;
+    }
+
+    html += "</ul>";
+
+    container.innerHTML = html;
 }
